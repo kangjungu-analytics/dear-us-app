@@ -36,10 +36,17 @@
       </div>
     </section>
 
-    <section id="pairView" class="center-card state-card hidden">
-      <div class="state-illustration pair-illustration"><div class="pair-orb orb-left">you</div><div class="pair-orb orb-right">me</div><span class="pair-link">♡</span><span class="spark spark-a">✳</span><span class="spark spark-b">✦</span></div>
-      <div class="state-content"><a class="auth-brand" href="#" aria-label="dear, us 홈"><span class="brand-mark">d<span>·</span>u</span><span class="brand-word">dear, <i>us</i></span></a><p class="eyebrow">MAKE IT YOURS</p><h1>이제 둘만의 공간을<br />만들 차례예요</h1><p class="muted">한 사람이 공간을 만들고 초대 코드를 보내면,<br />다른 사람이 입력해 함께 시작할 수 있어요.</p><button id="createCoupleButton" class="button primary full-button" type="button">우리 공간 만들기 <span>→</span></button>
-        <form id="joinForm" class="join-form"><label for="inviteInput">초대 코드가 있나요?</label><div class="join-row"><input id="inviteInput" maxlength="8" placeholder="코드 8자리" required /><button class="button secondary" type="submit">함께하기</button></div></form><p id="pairMessage" class="message-line" aria-live="polite"></p><button id="signOutButton" class="text-button" type="button">다른 계정으로 로그인</button>
+    <section id="pairView" class="center-card state-card pair-state hidden">
+      <div class="pair-content">
+        <a class="auth-brand" href="#" aria-label="dear, us 홈"><span class="brand-mark">d<span>·</span>u</span><span class="brand-word">dear, <i>us</i></span></a>
+        <div class="pair-art" aria-hidden="true"><span class="pair-star star-left">✦</span><span class="pair-star star-right">✧</span><span class="pair-orb orb-left">you</span><span class="pair-heart">♡</span><span class="pair-orb orb-right">me</span><span class="pair-caption">A LITTLE WORLD, JUST FOR TWO</span></div>
+        <p class="eyebrow">YOUR STORY STARTS HERE</p>
+        <h1>둘만의 이야기를<br />시작해 볼까요?</h1>
+        <p class="pair-description">우리 공간을 만들고 초대 코드를 보내거나,<br class="desktop-break" /> 받은 코드로 둘만의 기록을 함께 열어보세요.</p>
+        <button id="createCoupleButton" class="button primary full-button" type="button"><span>우리 공간 만들기</span><span aria-hidden="true">→</span></button>
+        <div class="join-divider"><span>이미 초대 코드가 있나요?</span></div>
+        <form id="joinForm" class="join-form"><label for="inviteInput">초대 코드</label><div class="join-row"><input id="inviteInput" maxlength="8" autocomplete="one-time-code" placeholder="8자리 코드를 입력해 주세요" required /><button class="button secondary" type="submit">함께하기</button></div></form>
+        <p id="pairMessage" class="message-line" aria-live="polite"></p><button id="signOutButton" class="text-button" type="button">다른 계정으로 로그인</button>
       </div>
     </section>
 

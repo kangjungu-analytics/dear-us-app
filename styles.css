@@ -124,3 +124,31 @@ body { background: radial-gradient(ellipse at 8% 5%, #f1e3df 0, transparent 29%)
 .invite-steps b { color: #a56a76; font-family: 'Playfair Display',serif; font-size: 15px; }
 .privacy-note { line-height: 1.7; }
 @media (max-width: 720px) { .auth-brand { margin-bottom: 25px; }.invite-actions { flex-direction: column; }.invite-actions .button { width: 100%; }.invite-steps { grid-template-columns: 1fr; gap: 7px; }.invite-steps span { padding: 10px 12px; } }
+
+/* Calm, focused onboarding for creating or joining a couple space. */
+.brand-mark { display: inline-flex; flex: none; align-items: center; justify-content: center; gap: 1px; letter-spacing: -.12em; }
+.pair-state { display: block; width: min(100%, 590px); min-height: 0; margin: clamp(20px, 6vh, 58px) auto 24px; border: 1px solid rgba(229,220,226,.9); border-radius: 30px; background: rgba(255,254,253,.96); box-shadow: 0 30px 90px rgba(48,35,47,.12), 0 4px 18px rgba(72,53,61,.04); }
+.pair-content { padding: 34px clamp(24px, 7vw, 62px) 38px; }
+.pair-content .auth-brand { margin: 0 0 27px; }
+.pair-content .auth-brand .brand-mark { color: #814f64; }
+.pair-art { position: relative; display: grid; height: 188px; place-items: center; overflow: hidden; margin: 0 0 31px; border: 1px solid rgba(255,255,255,.6); border-radius: 23px; background: radial-gradient(circle at 50% 35%,rgba(255,255,255,.52),transparent 38%),linear-gradient(125deg,#eadfe9,#f4e4df 52%,#e9e1d8); }
+.pair-art::before,.pair-art::after { position: absolute; width: 250px; height: 250px; border: 1px solid rgba(255,255,255,.52); border-radius: 50%; content: ''; }
+.pair-art::before { top: -166px; left: -72px; }.pair-art::after { right: -109px; bottom: -182px; width: 290px; height: 290px; }
+.pair-orb { position: absolute; z-index: 1; top: 47px; display: grid; width: 72px; height: 72px; place-items: center; border: 1px solid rgba(255,255,255,.9); border-radius: 50%; background: rgba(255,255,255,.74); color: #704f66; font-family: 'Playfair Display',serif; font-size: 17px; font-style: italic; box-shadow: 0 10px 30px rgba(83,57,75,.1); }
+.pair-art .orb-left { left: calc(50% - 84px); }.pair-art .orb-right { right: calc(50% - 84px); background: rgba(255,250,246,.82); }
+.pair-heart { position: absolute; z-index: 2; top: 65px; left: calc(50% - 13px); color: #ac6979; font-size: 26px; text-shadow: 0 2px 9px rgba(172,105,121,.2); }
+.pair-star { position: absolute; color: rgba(255,255,255,.95); }.star-left { top: 37px; left: 22%; font-size: 17px; }.star-right { right: 20%; bottom: 47px; font-size: 20px; }
+.pair-caption { position: absolute; bottom: 17px; color: #9b7c87; font-size: 8px; font-weight: 700; letter-spacing: .18em; }
+.pair-content > .eyebrow { margin-bottom: 10px; color: #996878; font-size: 9px; }
+.pair-content h1 { margin: 0; color: #342e38; font-size: clamp(27px,4vw,33px); font-weight: 600; letter-spacing: -.07em; line-height: 1.38; }
+.pair-description { margin: 11px 0 24px; color: #807984; font-size: 12px; line-height: 1.85; }
+.pair-content .full-button { display: flex; width: 100%; min-height: 54px; align-items: center; justify-content: space-between; padding: 0 19px; border-radius: 14px; text-align: left; font-size: 13px; }
+.pair-content .full-button span { float: none; }.pair-content .full-button span:last-child { font-size: 19px; }
+.join-divider { position: relative; display: grid; place-items: center; margin: 23px 0 17px; color: #9c939c; font-size: 10px; }
+.join-divider::before { position: absolute; z-index: 0; right: 0; left: 0; height: 1px; background: #eee9ed; content: ''; }
+.join-divider span { position: relative; z-index: 1; padding: 0 12px; background: var(--paper); }
+.pair-content .join-form { gap: 8px; margin-top: 0; }.pair-content .join-form label { color: #625965; font-size: 10px; }
+.pair-content .join-row { gap: 9px; }.pair-content .join-row input { min-height: 49px; border-radius: 12px; font-size: 12px; letter-spacing: .04em; text-transform: none; }
+.pair-content .join-row input::placeholder { font-size: 11px; letter-spacing: 0; }.pair-content .join-row .button { min-width: 98px; border-radius: 12px; font-size: 11px; }
+.pair-content .message-line { min-height: 18px; margin-top: 10px; font-size: 11px; }.pair-content .text-button { margin-top: 10px; color: #948c96; font-size: 10px; }
+@media (max-width: 720px) { .page-shell { width: min(100% - 24px, 590px); margin: max(14px,env(safe-area-inset-top)) auto 16px; }.pair-state { margin: 16px auto 18px; border-radius: 25px; }.pair-content { padding: 24px 22px 27px; }.pair-content .auth-brand { margin-bottom: 22px; }.pair-art { height: 156px; margin-bottom: 25px; border-radius: 19px; }.pair-orb { top: 35px; width: 65px; height: 65px; }.pair-art .orb-left { left: calc(50% - 75px); }.pair-art .orb-right { right: calc(50% - 75px); }.pair-heart { top: 52px; }.pair-content h1 { font-size: 27px; }.pair-description { font-size: 11px; }.pair-content .join-row input { min-width: 0; }.pair-content .join-row .button { min-width: 92px; }.desktop-break { display: none; } }

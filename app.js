@@ -205,6 +205,7 @@ $("#authModeButton").addEventListener("click", () => {
   setAuthMode(authMode === "signin" ? "signup" : "signin");
 });
 
+
 $("#authForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const email = $("#emailInput").value.trim();
@@ -238,6 +239,10 @@ $("#signOutButton").addEventListener("click", signOut);
 $("#signOutAppButton").addEventListener("click", signOut);
 
 $("#createCoupleButton").addEventListener("click", async () => {
+  const button = $("#createCoupleButton");
+  button.disabled = true;
+  button.querySelector("span").textContent = "공간을 준비하고 있어요…";
+  setMessage("#pairMessage", "둘만의 공간을 안전하게 만들고 있어요.");
   try {
     const { data, error } = await supabase.rpc("create_couple");
     if (error) throw error;
@@ -245,7 +250,13 @@ $("#createCoupleButton").addEventListener("click", async () => {
     switchTab("invitePanel");
     showAppMessage("공간을 만들었어요. 초대 화면에서 코드를 복사해 연인에게 보내주세요.");
   } catch (error) {
-    setMessage("#pairMessage", error.message, true);
+    const detail = error.message?.includes("gen_random_bytes")
+      ? "초대 코드 설정을 업데이트해야 해요. 잠시 후 다시 시도해 주세요."
+      : error.message;
+    setMessage("#pairMessage", detail, true);
+  } finally {
+    button.disabled = false;
+    button.querySelector("span").textContent = "우리 공간 만들기";
   }
 });
 

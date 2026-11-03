@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#f8f6f2" />
   <meta name="description" content="둘만의 대화와 사진을 차곡차곡 모으는 공간" />
+  <meta name="robots" content="index,follow" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="dear, us — 둘만의 공간" />
+  <meta property="og:description" content="둘만의 대화와 사진을 차곡차곡 모으는 공간" />
+  <meta property="og:url" content="https://kangjungu-analytics.github.io/dear-us-app/" />
+  <link rel="canonical" href="https://kangjungu-analytics.github.io/dear-us-app/" />
   <title>dear, us — 둘만의 공간</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,7 +30,7 @@
 
     <section id="authView" class="center-card state-card hidden">
       <div class="state-illustration auth-illustration"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="illustration-heart">♡</span><span class="illustration-caption">just between<br />the two of us</span><span class="spark spark-a">✳</span><span class="spark spark-b">✦</span></div>
-      <div class="state-content"><span class="brand-mark">d<span>·</span>u</span><p class="eyebrow">A LITTLE SPACE FOR TWO</p><h1 id="authTitle">다시 만나 반가워요</h1><p class="muted">둘만의 대화와 사진을 담아두는<br />작은 공간이에요.</p>
+      <div class="state-content"><a class="auth-brand" href="#" aria-label="dear, us 홈"><span class="brand-mark">d<span>·</span>u</span><span class="brand-word">dear, <i>us</i></span></a><p class="eyebrow">A LITTLE SPACE FOR TWO</p><h1 id="authTitle">다시 만나 반가워요</h1><p class="muted">둘만의 대화와 사진을 담아두는<br />작은 공간이에요.</p>
         <form id="authForm" class="stack-form"><label>이메일<input id="emailInput" type="email" autocomplete="email" required placeholder="you@example.com" /></label><label>비밀번호<input id="passwordInput" type="password" autocomplete="current-password" minlength="8" required placeholder="8자 이상 입력해 주세요" /></label><button id="authSubmit" class="button primary" type="submit">로그인하기 <span>→</span></button></form>
         <p id="authMessage" class="message-line" aria-live="polite"></p><button id="authModeButton" class="text-button" type="button">처음 오셨나요? <strong>계정 만들기</strong></button>
       </div>
@@ -32,7 +38,7 @@
 
     <section id="pairView" class="center-card state-card hidden">
       <div class="state-illustration pair-illustration"><div class="pair-orb orb-left">you</div><div class="pair-orb orb-right">me</div><span class="pair-link">♡</span><span class="spark spark-a">✳</span><span class="spark spark-b">✦</span></div>
-      <div class="state-content"><span class="brand-mark">d<span>·</span>u</span><p class="eyebrow">MAKE IT YOURS</p><h1>이제 둘만의 공간을<br />만들 차례예요</h1><p class="muted">한 사람이 공간을 만들고 코드를 보내면,<br />다른 사람이 입력해 함께 시작할 수 있어요.</p><button id="createCoupleButton" class="button primary full-button" type="button">우리 공간 만들기 <span>→</span></button>
+      <div class="state-content"><a class="auth-brand" href="#" aria-label="dear, us 홈"><span class="brand-mark">d<span>·</span>u</span><span class="brand-word">dear, <i>us</i></span></a><p class="eyebrow">MAKE IT YOURS</p><h1>이제 둘만의 공간을<br />만들 차례예요</h1><p class="muted">한 사람이 공간을 만들고 초대 코드를 보내면,<br />다른 사람이 입력해 함께 시작할 수 있어요.</p><button id="createCoupleButton" class="button primary full-button" type="button">우리 공간 만들기 <span>→</span></button>
         <form id="joinForm" class="join-form"><label for="inviteInput">초대 코드가 있나요?</label><div class="join-row"><input id="inviteInput" maxlength="8" placeholder="코드 8자리" required /><button class="button secondary" type="submit">함께하기</button></div></form><p id="pairMessage" class="message-line" aria-live="polite"></p><button id="signOutButton" class="text-button" type="button">다른 계정으로 로그인</button>
       </div>
     </section>
@@ -46,7 +52,7 @@
 
       <section id="albumPanel" class="panel hidden"><div class="panel-heading"><div><p class="eyebrow">MEMORIES, KEPT CLOSE</p><h2>우리의 사진첩</h2></div><span class="photo-count" id="photoCount">0장의 기억</span></div><div class="album-intro"><span class="album-icon">✿</span><div><strong>오래 간직하고 싶은 순간</strong><p>사진과 짧은 메모를 둘만의 앨범에 남겨요.</p></div></div><form id="photoForm" class="upload-card"><label class="upload-picker"><span>＋</span> 사진 고르기<input id="photoInput" type="file" accept="image/jpeg,image/png,image/webp" /></label><input id="captionInput" class="caption-input" maxlength="120" placeholder="이 순간을 기억할 메모" /><button id="uploadButton" class="button primary" type="submit">앨범에 담기 <span>→</span></button></form><p class="privacy-note"><span>◉</span> 사진은 비공개로 저장되고 연결된 두 계정만 볼 수 있어요.</p><div id="photoGrid" class="photo-grid"><p class="empty-state">함께 간직할 사진을 올려보세요. 🌷</p></div></section>
 
-      <section id="invitePanel" class="panel hidden"><div class="panel-heading"><div><p class="eyebrow">YOUR LITTLE WORLD</p><h2>우리 공간</h2></div></div><div class="invite-card"><div class="invite-art">♡</div><p class="eyebrow">A PRIVATE PLACE FOR TWO</p><strong class="invite-title">둘만의 공간에 초대해요</strong><p class="muted">아직 연결되지 않았다면 초대 코드를 보내주세요.</p><strong id="inviteCodeDisplay" class="invite-code">--------</strong><button id="copyInviteButton" class="button secondary" type="button">초대 코드 복사 <span>↗</span></button></div><p class="privacy-note">초대 코드는 함께 공간을 쓸 사람에게만 보내주세요.</p></section>
+      <section id="invitePanel" class="panel hidden"><div class="panel-heading"><div><p class="eyebrow">YOUR LITTLE WORLD</p><h2>우리 공간</h2></div></div><div class="invite-card"><div class="invite-art">♡</div><p class="eyebrow">A PRIVATE PLACE FOR TWO</p><strong class="invite-title">둘만의 공간에 초대해요</strong><p class="muted">아래 코드를 연인에게 보내주세요.</p><strong id="inviteCodeDisplay" class="invite-code">--------</strong><div class="invite-actions"><button id="copyInviteButton" class="button secondary" type="button">코드 복사 <span>▣</span></button><button id="shareInviteButton" class="button primary" type="button">초대 보내기 <span>↗</span></button></div></div><div class="invite-steps"><span><b>01</b> 이 코드를 복사해요</span><span><b>02</b> 연인이 회원가입해요</span><span><b>03</b> 로그인 후 코드를 입력해요</span></div><p class="privacy-note">초대 코드는 한 사람만 사용할 수 있어요. 연결 후에는 두 계정만 대화와 사진을 볼 수 있어요.</p></section>
       <p id="appMessage" class="message-line app-message" aria-live="polite"></p>
     </section>
     <footer><span>dear, us</span> — 작은 순간을 둘이 함께.</footer>

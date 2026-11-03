@@ -17,6 +17,15 @@ function showView(id) {
   for (const view of views) document.getElementById(view).classList.toggle("hidden", view !== id);
 }
 
+function switchTab(id) {
+  document.querySelectorAll(".tab").forEach((tab) => {
+    const active = tab.dataset.tab === id;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+  });
+  document.querySelectorAll(".panel").forEach((panel) => panel.classList.toggle("hidden", panel.id !== id));
+}
+
 function setMessage(selector, message, isError = false) {
   const el = $(selector);
   el.textContent = message || "";
@@ -209,7 +218,7 @@ $("#authForm").addEventListener("submit", async (event) => {
       : await supabase.auth.signInWithPassword({ email, password });
     if (result.error) throw result.error;
     if (authMode === "signup" && !result.data.session) {
-      setMessage("#authMessage", "가입 확인 메일을 보냈어요. 메일의 링크를 누른 뒤 로그인해 주세요.");
+      setMessage("#authMessage", "dear, us에 오신 걸 환영해요. 가입 확인 메일의 링크를 누른 뒤 로그인해 주세요.");
     } else {
       setMessage("#authMessage", "로그인했어요.");
       if (result.data.session) await handleSession(result.data.session);
@@ -232,9 +241,9 @@ $("#createCoupleButton").addEventListener("click", async () => {
   try {
     const { data, error } = await supabase.rpc("create_couple");
     if (error) throw error;
-    const result = Array.isArray(data) ? data[0] : data;
-    setMessage("#pairMessage", `공간을 만들었어요. 초대 코드: ${result.invite_code}`);
     await enterApp();
+    switchTab("invitePanel");
+    showAppMessage("공간을 만들었어요. 초대 화면에서 코드를 복사해 연인에게 보내주세요.");
   } catch (error) {
     setMessage("#pairMessage", error.message, true);
   }
@@ -321,10 +330,7 @@ $("#photoForm").addEventListener("submit", async (event) => {
 
 document.querySelectorAll(".tab").forEach((button) => {
   button.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((tab) => tab.classList.remove("active"));
-    document.querySelectorAll(".panel").forEach((panel) => panel.classList.add("hidden"));
-    button.classList.add("active");
-    document.getElementById(button.dataset.tab).classList.remove("hidden");
+    switchTab(button.dataset.tab);
   });
 });
 
@@ -334,6 +340,20 @@ $("#copyInviteButton").addEventListener("click", async () => {
     showAppMessage("초대 코드를 복사했어요.");
   } catch {
     showAppMessage(`초대 코드: ${currentCouple.invite_code}`);
+  }
+});
+
+$("#shareInviteButton").addEventListener("click", async () => {
+  const message = `dear, us에 초대할게요 ♡\n사이트: ${window.location.origin}${window.location.pathname}\n초대 코드: ${currentCouple.invite_code}\n가입 후 로그인해서 이 코드를 입력해 주세요.`;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "dear, us 초대", text: message });
+    } else {
+      await navigator.clipboard.writeText(message);
+      showAppMessage("초대 링크와 코드가 복사됐어요. 연인에게 보내주세요.");
+    }
+  } catch (error) {
+    if (error.name !== "AbortError") showAppMessage("공유를 열지 못했어요. 코드 복사를 이용해 주세요.", true);
   }
 });
 

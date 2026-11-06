@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "dear, us — 둘만의 공간",
+  "short_name": "dear, us",
+  "description": "둘만의 대화와 사진을 차곡차곡 모으는 공간",
+  "lang": "ko-KR",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8f6f4",
+  "theme_color": "#f8f6f4",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -13,6 +13,9 @@ let currentCouple;
 let authMode = "signin";
 let realtimeChannel;
 let handledUserId;
+let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let selectedCalendarDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+let calendarEvents = [];
 
 function showView(id) {
   for (const view of views) document.getElementById(view).classList.toggle("hidden", view !== id);
@@ -126,6 +129,169 @@ async function loadPhotos() {
   }
 }
 
+function dateKey(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return year + "-" + month + "-" + day;
+}
+
+function calendarMonthKey(date) {
+  return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-01";
+}
+
+function renderCalendar() {
+  const monthLabel = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long" });
+  $("#calendarMonthLabel").textContent = monthLabel.format(calendarMonth);
+  $("#selectedDateLabel").textContent = new Intl.DateTimeFormat("ko-KR", {
+    year: "numeric", month: "long", day: "numeric", weekday: "long"
+  }).format(selectedCalendarDate);
+
+  const days = $("#calendarDays");
+  days.replaceChildren();
+  const firstDay = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth(), 1);
+  const gridStart = new Date(firstDay.getFullYear(), firstDay.getMonth(), 1 - firstDay.getDay());
+  const eventCounts = new Map();
+  for (const calendarEvent of calendarEvents) {
+    eventCounts.set(calendarEvent.event_date, (eventCounts.get(calendarEvent.event_date) || 0) + 1);
+  }
+
+  for (let index = 0; index < 42; index += 1) {
+    const day = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + index);
+    const key = dateKey(day);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "calendar-day";
+    if (day.getMonth() !== calendarMonth.getMonth()) button.classList.add("outside-month");
+    if (key === dateKey(selectedCalendarDate)) button.classList.add("selected");
+    if (key === dateKey(new Date())) button.classList.add("today");
+    const eventCount = eventCounts.get(key) || 0;
+    button.setAttribute("aria-label", monthLabel.format(day) + " " + day.getDate() + "일" + (eventCount ? ", 일정 " + eventCount + "개" : ""));
+    const number = document.createElement("span");
+    number.className = "calendar-day-number";
+    number.textContent = String(day.getDate());
+    button.append(number);
+    if (eventCount) {
+      const dots = document.createElement("span");
+      dots.className = "calendar-event-dots";
+      dots.setAttribute("aria-hidden", "true");
+      for (let dot = 0; dot < Math.min(eventCount, 3); dot += 1) {
+        const marker = document.createElement("i");
+        dots.append(marker);
+      }
+      button.append(dots);
+    }
+    button.addEventListener("click", () => {
+      selectedCalendarDate = day;
+      if (day.getMonth() !== calendarMonth.getMonth()) {
+        calendarMonth = new Date(day.getFullYear(), day.getMonth(), 1);
+        loadCalendar().catch((error) => showAppMessage("캘린더를 불러오지 못했어요: " + error.message, true));
+      } else {
+        renderCalendar();
+      }
+    });
+    days.append(button);
+  }
+  renderCalendarEvents();
+}
+
+function renderCalendarEvents() {
+  const date = dateKey(selectedCalendarDate);
+  const events = calendarEvents.filter((event) => event.event_date === date);
+  $("#selectedEventCount").textContent = events.length ? events.length + "개 일정" : "";
+  const list = $("#calendarEventList");
+  list.replaceChildren();
+  if (!events.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "이 날에는 아직 일정이 없어요.";
+    list.append(empty);
+    return;
+  }
+
+  for (const calendarEvent of events) {
+    const card = document.createElement("article");
+    card.className = "calendar-event";
+    const time = document.createElement("span");
+    time.className = "calendar-event-time";
+    time.textContent = calendarEvent.start_time
+      ? calendarEvent.start_time.slice(0, 5) + (calendarEvent.end_time ? " – " + calendarEvent.end_time.slice(0, 5) : "")
+      : "하루 종일";
+    const content = document.createElement("div");
+    content.className = "calendar-event-content";
+    const title = document.createElement("strong");
+    title.textContent = calendarEvent.title;
+    content.append(title);
+    if (calendarEvent.notes) {
+      const notes = document.createElement("p");
+      notes.textContent = calendarEvent.notes;
+      content.append(notes);
+    }
+    const actions = document.createElement("div");
+    actions.className = "calendar-event-actions";
+    const edit = document.createElement("button");
+    edit.type = "button";
+    edit.className = "calendar-event-action";
+    edit.textContent = "수정";
+    edit.setAttribute("aria-label", calendarEvent.title + " 수정");
+    edit.addEventListener("click", () => openEventDialog(calendarEvent));
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "calendar-event-action danger";
+    remove.textContent = "삭제";
+    remove.setAttribute("aria-label", calendarEvent.title + " 삭제");
+    remove.addEventListener("click", () => deleteCalendarEvent(calendarEvent));
+    actions.append(edit, remove);
+    card.append(time, content, actions);
+    list.append(card);
+  }
+}
+
+async function loadCalendar() {
+  if (!currentCouple) return;
+  const start = calendarMonthKey(calendarMonth);
+  const nextMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1);
+  const { data, error } = await supabase
+    .from("calendar_events")
+    .select("id, couple_id, creator_id, title, event_date, start_time, end_time, notes")
+    .eq("couple_id", currentCouple.id)
+    .gte("event_date", start)
+    .lt("event_date", calendarMonthKey(nextMonth))
+    .order("event_date", { ascending: true })
+    .order("start_time", { ascending: true, nullsFirst: true });
+  if (error) throw error;
+  calendarEvents = data || [];
+  renderCalendar();
+}
+
+function openEventDialog(calendarEvent = null) {
+  const form = $("#eventForm");
+  form.reset();
+  $("#eventFormMessage").textContent = "";
+  form.dataset.eventId = calendarEvent?.id || "";
+  $("#eventDialogTitle").textContent = calendarEvent ? "일정 수정" : "일정 추가";
+  $("#eventTitleInput").value = calendarEvent?.title || "";
+  $("#eventDateInput").value = calendarEvent?.event_date || dateKey(selectedCalendarDate);
+  $("#eventStartInput").value = calendarEvent?.start_time?.slice(0, 5) || "";
+  $("#eventEndInput").value = calendarEvent?.end_time?.slice(0, 5) || "";
+  $("#eventNotesInput").value = calendarEvent?.notes || "";
+  $("#eventDialog").showModal();
+  $("#eventTitleInput").focus();
+}
+
+async function deleteCalendarEvent(calendarEvent) {
+  if (!window.confirm("“" + calendarEvent.title + "” 일정을 삭제할까요?")) return;
+  try {
+    const { error } = await supabase.from("calendar_events")
+      .delete().eq("id", calendarEvent.id).eq("couple_id", currentCouple.id);
+    if (error) throw error;
+    await loadCalendar();
+    showAppMessage("일정을 삭제했어요.");
+  } catch (error) {
+    showAppMessage("일정을 삭제하지 못했어요: " + error.message, true);
+  }
+}
+
 async function deletePhoto(photo) {
   if (!window.confirm("이 사진을 두 사람의 앨범에서 삭제할까요?")) return;
   try {
@@ -153,6 +319,10 @@ async function startRealtime() {
       event: "INSERT", schema: "public", table: "photos",
       filter: `couple_id=eq.${currentCouple.id}`
     }, () => loadPhotos().catch((error) => showAppMessage(error.message, true)))
+    .on("postgres_changes", {
+      event: "*", schema: "public", table: "calendar_events",
+      filter: "couple_id=eq." + currentCouple.id
+    }, () => loadCalendar().catch((error) => showAppMessage("캘린더를 새로고침하지 못했어요: " + error.message, true)))
     .subscribe((status) => {
       const indicator = document.querySelector(".live-indicator");
       if (indicator) indicator.innerHTML = status === "SUBSCRIBED" ? "<i></i> 실시간 연결됨" : "<i></i> 연결 중";
@@ -170,7 +340,7 @@ async function enterApp() {
     }
     $("#inviteCodeDisplay").textContent = currentCouple.invite_code;
     showView("coupleView");
-    await Promise.all([loadMessages(), loadPhotos()]);
+    await Promise.all([loadMessages(), loadPhotos(), loadCalendar()]);
     await startRealtime();
   } catch (error) {
     showView("pairView");
@@ -381,7 +551,73 @@ $("#photoForm").addEventListener("submit", async (event) => {
 document.querySelectorAll(".tab").forEach((button) => {
   button.addEventListener("click", () => {
     switchTab(button.dataset.tab);
+    if (button.dataset.tab === "calendarPanel") {
+      loadCalendar().catch((error) => showAppMessage("캘린더를 불러오지 못했어요: " + error.message, true));
+    }
   });
+});
+
+function changeCalendarMonth(offset) {
+  const next = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + offset, 1);
+  const day = Math.min(selectedCalendarDate.getDate(), new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate());
+  calendarMonth = next;
+  selectedCalendarDate = new Date(next.getFullYear(), next.getMonth(), day);
+  loadCalendar().catch((error) => showAppMessage("캘린더를 불러오지 못했어요: " + error.message, true));
+}
+
+$("#previousMonthButton").addEventListener("click", () => changeCalendarMonth(-1));
+$("#nextMonthButton").addEventListener("click", () => changeCalendarMonth(1));
+$("#todayButton").addEventListener("click", () => {
+  selectedCalendarDate = new Date();
+  calendarMonth = new Date(selectedCalendarDate.getFullYear(), selectedCalendarDate.getMonth(), 1);
+  loadCalendar().catch((error) => showAppMessage("캘린더를 불러오지 못했어요: " + error.message, true));
+});
+$("#addEventButton").addEventListener("click", () => openEventDialog());
+$("#closeEventDialogButton").addEventListener("click", () => $("#eventDialog").close());
+$("#cancelEventButton").addEventListener("click", () => $("#eventDialog").close());
+$("#eventForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!currentCouple || !currentUser) return;
+  const title = $("#eventTitleInput").value.trim();
+  const eventDate = $("#eventDateInput").value;
+  const startTime = $("#eventStartInput").value || null;
+  const endTime = $("#eventEndInput").value || null;
+  const notes = $("#eventNotesInput").value.trim() || null;
+  if (startTime && endTime && endTime <= startTime) {
+    setMessage("#eventFormMessage", "종료 시간은 시작 시간보다 뒤로 설정해 주세요.", true);
+    return;
+  }
+
+  const button = $("#saveEventButton");
+  button.disabled = true;
+  setMessage("#eventFormMessage", "저장 중이에요…");
+  const values = {
+    title,
+    event_date: eventDate,
+    start_time: startTime,
+    end_time: endTime,
+    notes
+  };
+  try {
+    const eventId = event.currentTarget.dataset.eventId;
+    const result = eventId
+      ? await supabase.from("calendar_events").update(values).eq("id", eventId).eq("couple_id", currentCouple.id)
+      : await supabase.from("calendar_events").insert({
+          ...values,
+          couple_id: currentCouple.id,
+          creator_id: currentUser.id
+        });
+    if (result.error) throw result.error;
+    selectedCalendarDate = new Date(eventDate + "T00:00:00");
+    calendarMonth = new Date(selectedCalendarDate.getFullYear(), selectedCalendarDate.getMonth(), 1);
+    $("#eventDialog").close();
+    await loadCalendar();
+    showAppMessage(eventId ? "일정을 수정했어요." : "일정을 추가했어요.");
+  } catch (error) {
+    setMessage("#eventFormMessage", "저장하지 못했어요: " + error.message, true);
+  } finally {
+    button.disabled = false;
+  }
 });
 
 $("#copyInviteButton").addEventListener("click", async () => {

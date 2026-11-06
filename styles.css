@@ -92,6 +92,64 @@ button { cursor: pointer; }
 @media (max-width: 720px) { .page-shell { width: min(100% - 24px, 600px); margin: 20px auto 16px; }.state-card { grid-template-columns: 1fr; min-height: 0; margin: 3vh auto 18px; }.state-illustration { min-height: 185px; }.illustration-heart { width: 105px; height: 105px; font-size: 72px; }.auth-illustration .illustration-heart { width: 110px; height: 110px; font-size: 76px; }.illustration-caption { bottom: 17px; left: 20px; font-size: 11px; }.state-content { padding: 26px 28px 30px; }.state-content .brand-mark { width: 42px; height: 42px; margin-bottom: 24px; border-radius: 14px; font-size: 18px; }.state-content h1 { font-size: 25px; }.pair-orb { top: 26%; width: 68px; height: 68px; font-size: 16px; }.pair-link { top: 31%; font-size: 24px; }.orb-left { left: 32%; }.orb-right { right: 32%; }.app-card { padding: 0 20px 17px; border-radius: 23px; }.topbar { padding: 15px 0; }.brand-mark.mini { width: 37px; height: 37px; font-size: 17px; }.brand-word { font-size: 17px; }.topbar-right { gap: 8px; }.private-label { font-size: 0; }.private-label i { width: 7px; height: 7px; }.icon-button { font-size: 9px; }.couple-banner { min-height: 190px; margin: 17px 0 14px; padding: 22px 19px; }.banner-copy .eyebrow { max-width: 175px; font-size: 8px; }.banner-copy h1 { font-size: 23px; }.banner-copy > p:not(.eyebrow) { max-width: 205px; font-size: 10px; }.banner-stamp { margin-top: 13px; font-size: 7px; }.banner-art { right: 4%; width: 190px; opacity: .68; }.art-sun { top: 26px; right: 43px; width: 70px; height: 70px; }.art-arch { right: 47px; width: 95px; height: 132px; }.arch-inner { inset: 23px 20px 0; }.art-note { top: 68px; right: -22px; font-size: 9px; }.art-note i { font-size: 11px; }.star-one { right: 145px; }.days-badge { position: absolute; right: 14px; bottom: 12px; min-width: auto; gap: 2px; padding: 7px 9px; }.days-badge span { font-size: 7px; }.days-badge strong { font-size: 12px; }.days-badge i { font-size: 7px; }.tabs { gap: 0; }.tab { flex: 1; justify-content: center; gap: 6px; padding: 12px 5px; font-size: 10px; }.tab.active::after { right: 17%; left: 17%; }.panel { padding-top: 21px; }.messages-list { height: 52vh; min-height: 245px; padding: 15px 12px; }.message-row { max-width: 88%; }.bubble { font-size: 11px; }.upload-card { grid-template-columns: 1fr 1fr; }.caption-input { grid-column: 1/-1; grid-row: 2; }.upload-card .button { grid-column: 2; grid-row: 1; }.upload-picker { grid-column: 1; grid-row: 1; }.photo-grid { grid-template-columns: repeat(2,1fr); }.invite-code { font-size: 23px; } }
 @media (max-width: 390px) { .app-card { padding-right: 14px; padding-left: 14px; }.couple-banner { padding-left: 15px; }.banner-art { right: -6%; opacity: .57; }.banner-copy h1 { font-size: 21px; }.tab { font-size: 9px; }.tab-icon { font-size: 12px; }.send-button { gap: 7px; padding: 0 11px; } }
 
+.calendar-add { padding: 9px 13px; font-size: 10px; }
+.calendar-card { overflow: hidden; border: 1px solid #f0e9e4; border-radius: 17px; background: #fff; }
+.calendar-toolbar { display: flex; align-items: center; gap: 8px; padding: 13px 15px; border-bottom: 1px solid #f2eeea; }
+.calendar-toolbar h3 { min-width: 120px; margin: 0; color: #55484c; font-size: 14px; font-weight: 600; text-align: center; }
+.calendar-arrow { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid #eee7e2; border-radius: 9px; background: #fff; color: #8b6c69; font-size: 20px; }
+.calendar-today { margin-left: auto; border: 0; border-radius: 9px; background: #f8f1ee; padding: 8px 11px; color: #8f6260; font-size: 10px; font-weight: 700; }
+.calendar-weekdays, .calendar-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
+.calendar-weekdays { padding: 10px 8px 5px; color: #a79d98; text-align: center; font-size: 9px; }
+.calendar-days { padding: 2px 8px 12px; }
+.calendar-day { display: flex; min-width: 0; min-height: 53px; flex-direction: column; align-items: center; justify-content: flex-start; gap: 5px; border: 0; border-radius: 11px; background: transparent; padding: 7px 2px 4px; color: #514a48; }
+.calendar-day:hover { background: #faf6f3; }
+.calendar-day.outside-month { color: #c5bfbb; }
+.calendar-day-number { display: grid; width: 27px; height: 27px; place-items: center; border-radius: 50%; font-size: 10px; }
+.calendar-day.today .calendar-day-number { border: 1px solid #c88a84; color: #a56562; font-weight: 700; }
+.calendar-day.selected .calendar-day-number { border: 0; background: #b77470; color: #fff; font-weight: 700; }
+.calendar-event-dots { display: flex; min-height: 4px; gap: 3px; }
+.calendar-event-dots i { width: 4px; height: 4px; border-radius: 50%; background: #c58a82; }
+.calendar-day-heading { display: flex; align-items: end; justify-content: space-between; margin: 24px 2px 11px; }
+.calendar-day-heading .eyebrow { margin: 0 0 5px; }
+.calendar-day-heading h3 { margin: 0; color: #514448; font-size: 15px; font-weight: 600; }
+.calendar-event-list { display: grid; gap: 9px; min-height: 76px; }
+.calendar-event { display: grid; grid-template-columns: 75px minmax(0, 1fr) auto; align-items: start; gap: 13px; padding: 14px; border: 1px solid #f0e8e3; border-radius: 13px; background: #fff; }
+.calendar-event-time { padding-top: 2px; color: #a76f6b; font-size: 10px; font-weight: 700; }
+.calendar-event-content { min-width: 0; }
+.calendar-event-content strong { display: block; color: #514448; font-size: 12px; overflow-wrap: anywhere; }
+.calendar-event-content p { margin: 5px 0 0; color: #928984; font-size: 10px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.calendar-event-actions { display: flex; gap: 5px; }
+.calendar-event-action { border: 0; border-radius: 7px; background: #f7f3f0; padding: 6px 8px; color: #83746f; font-size: 9px; }
+.calendar-event-action.danger { background: #fbf0ee; color: #a45c59; }
+.event-dialog { width: min(100% - 28px, 430px); max-width: 430px; border: 1px solid #eee5df; border-radius: 20px; padding: 0; background: #fffefd; color: var(--ink); box-shadow: 0 24px 70px rgba(48, 35, 31, .22); }
+.event-dialog::backdrop { background: rgba(44, 36, 39, .34); backdrop-filter: blur(3px); }
+.event-form { display: grid; gap: 14px; padding: 22px; }
+.event-dialog-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.event-dialog-heading .eyebrow { margin: 0 0 5px; }
+.event-dialog-heading h2 { margin: 0; color: #514448; font-size: 18px; }
+.dialog-close { width: 32px; height: 32px; border: 0; border-radius: 10px; background: #f7f2ee; color: #796c68; font-size: 22px; }
+.event-form > label, .event-time-row label { display: grid; gap: 7px; color: #665d59; font-size: 10px; font-weight: 700; }
+.event-form label span { color: #a69a94; font-size: 9px; font-weight: 400; }
+.event-form input, .event-form textarea { width: 100%; border: 1px solid #ebe5df; border-radius: 10px; background: #fff; padding: 11px 12px; color: var(--ink); outline: none; font-size: 12px; }
+.event-form input:focus, .event-form textarea:focus { border-color: #d9a19a; box-shadow: 0 0 0 3px #f7eeeb; }
+.event-form textarea { resize: vertical; }
+.event-time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.event-form-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.event-form-actions .button { font-size: 10px; }
+.event-form .message-line { min-height: 0; margin: 0; font-size: 10px; }
+@media (max-width: 520px) {
+  .calendar-toolbar { gap: 5px; padding: 11px 9px; }
+  .calendar-toolbar h3 { min-width: 100px; font-size: 12px; }
+  .calendar-day { min-height: 47px; }
+  .calendar-days { padding-right: 4px; padding-left: 4px; }
+  .calendar-day-number { width: 25px; height: 25px; }
+  .calendar-event { grid-template-columns: 1fr auto; gap: 7px 9px; }
+  .calendar-event-time { grid-column: 1/-1; }
+  .calendar-event-actions { grid-column: 2; grid-row: 2; }
+  .calendar-add { padding: 8px 10px; }
+  .event-form { padding: 18px; }
+}
+
 /* Brand and onboarding refinements */
 :root { --ink: #29242d; --muted: #7e7681; --rose: #c77978; --rose-deep: #8f4f5b; --plum: #44364a; --line: #ece6e9; --paper: #fffefd; }
 body { background: radial-gradient(ellipse at 8% 5%, #f1e3df 0, transparent 29%), radial-gradient(ellipse at 93% 96%, #e9e5f0 0, transparent 30%), #f8f6f4; }

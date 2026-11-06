@@ -37,7 +37,7 @@
       <div class="state-illustration auth-illustration"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="illustration-heart">♡</span><span class="illustration-caption">just between<br />the two of us</span><span class="spark spark-a">✳</span><span class="spark spark-b">✦</span></div>
       <div class="state-content"><a class="auth-brand" href="#" aria-label="dear, us 홈"><span class="brand-mark">d<span>·</span>u</span><span class="brand-word">dear, <i>us</i></span></a><p class="eyebrow">A LITTLE SPACE FOR TWO</p><h1 id="authTitle">다시 만나 반가워요</h1><p class="muted">둘만의 대화와 사진을 담아두는<br />작은 공간이에요.</p>
         <form id="authForm" class="stack-form"><label>이메일<input id="emailInput" type="email" autocomplete="email" required placeholder="you@example.com" /></label><label>비밀번호<input id="passwordInput" type="password" autocomplete="current-password" minlength="8" required placeholder="8자 이상 입력해 주세요" /></label><button id="authSubmit" class="button primary" type="submit">로그인하기 <span>→</span></button></form>
-        <p id="authMessage" class="message-line" aria-live="polite"></p><button id="authModeButton" class="text-button" type="button">처음 오셨나요? <strong>계정 만들기</strong></button>
+        <p id="authMessage" class="message-line" aria-live="polite"></p><button id="resendEmailButton" class="text-button hidden" type="button">가입 확인 메일 다시 보내기</button><button id="authModeButton" class="text-button" type="button">처음 오셨나요? <strong>계정 만들기</strong></button>
       </div>
     </section>
 
@@ -69,7 +69,7 @@
     </section>
     <footer><span>dear, us</span> — 작은 순간을 둘이 함께.</footer>
   </main>
-  <script type="module" src="app.js?v=20261106pwa1"></script>
+  <script type="module" src="app.js?v=20261107auth1"></script>
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {

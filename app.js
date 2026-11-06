@@ -12,6 +12,7 @@ let currentUser;
 let currentCouple;
 let authMode = "signin";
 let realtimeChannel;
+let handledUserId;
 
 function showView(id) {
   for (const view of views) document.getElementById(view).classList.toggle("hidden", view !== id);
@@ -178,7 +179,13 @@ async function enterApp() {
 }
 
 async function handleSession(session) {
-  currentUser = session?.user || null;
+  const nextUser = session?.user || null;
+  const nextUserId = nextUser?.id || null;
+  // INITIAL_SESSION, getSession(), and a form handler can report the same
+  // session close together. Enter the private area only once per account.
+  if (handledUserId === nextUserId) return;
+  handledUserId = nextUserId;
+  currentUser = nextUser;
   currentCouple = null;
   if (realtimeChannel) {
     await supabase.removeChannel(realtimeChannel);
@@ -213,19 +220,51 @@ $("#authForm").addEventListener("submit", async (event) => {
   const button = $("#authSubmit");
   button.disabled = true;
   setMessage("#authMessage", "처리 중이에요…");
+  $("#resendEmailButton").classList.add("hidden");
   try {
     const result = authMode === "signup"
       ? await supabase.auth.signUp({ email, password })
       : await supabase.auth.signInWithPassword({ email, password });
     if (result.error) throw result.error;
     if (authMode === "signup" && !result.data.session) {
-      setMessage("#authMessage", "dear, us에 오신 걸 환영해요. 가입 확인 메일의 링크를 누른 뒤 로그인해 주세요.");
+      setMessage("#authMessage", "가입 확인 메일을 보냈어요. 메일의 링크를 누른 뒤 로그인해 주세요. 메일이 안 보이면 스팸함을 확인하거나 아래에서 다시 보내세요.");
+      $("#resendEmailButton").classList.remove("hidden");
     } else {
       setMessage("#authMessage", "로그인했어요.");
-      if (result.data.session) await handleSession(result.data.session);
     }
   } catch (error) {
-    setMessage("#authMessage", error.message, true);
+    const message = error.message || "요청을 처리하지 못했어요.";
+    if (/email not confirmed/i.test(message)) {
+      setMessage("#authMessage", "이메일 확인이 아직 끝나지 않았어요. 확인 메일을 다시 보내드릴게요.", true);
+      $("#resendEmailButton").classList.remove("hidden");
+    } else if (/invalid login credentials/i.test(message)) {
+      setMessage("#authMessage", "이메일 또는 비밀번호를 확인해 주세요. 가입 확인 메일을 누르지 않았다면 먼저 메일을 확인해 주세요.", true);
+    } else if (/rate limit|too many requests/i.test(message)) {
+      setMessage("#authMessage", "요청이 잠시 많아요. 잠깐 기다린 뒤 다시 시도해 주세요.", true);
+    } else {
+      setMessage("#authMessage", message, true);
+    }
+  } finally {
+    button.disabled = false;
+  }
+});
+
+$("#resendEmailButton").addEventListener("click", async () => {
+  const email = $("#emailInput").value.trim();
+  if (!email) {
+    setMessage("#authMessage", "먼저 가입한 이메일 주소를 입력해 주세요.", true);
+    $("#emailInput").focus();
+    return;
+  }
+  const button = $("#resendEmailButton");
+  button.disabled = true;
+  setMessage("#authMessage", "확인 메일을 다시 보내고 있어요…");
+  try {
+    const { error } = await supabase.auth.resend({ type: "signup", email });
+    if (error) throw error;
+    setMessage("#authMessage", "확인 메일을 다시 보냈어요. 받은편지함과 스팸함을 확인해 주세요.");
+  } catch (error) {
+    setMessage("#authMessage", error.message || "메일을 다시 보내지 못했어요. 잠시 후 시도해 주세요.", true);
   } finally {
     button.disabled = false;
   }
@@ -386,8 +425,9 @@ async function start() {
     if (error) throw error;
     await handleSession(data.session);
   } catch (error) {
-    showView("setupView");
     console.error(error);
+    showView("authView");
+    setMessage("#authMessage", "로그인 서버에 연결하지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.", true);
   }
 }
 

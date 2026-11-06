@@ -1,4 +1,4 @@
-const CACHE_NAME = "dear-us-shell-v1";
+const CACHE_NAME = "dear-us-shell-v2";
 const APP_ROOT = new URL("./", self.location).pathname;
 const INDEX_URL = new URL("./index.html", self.location).href;
 const STATIC_PATHS = new Set([
@@ -17,7 +17,7 @@ self.addEventListener("install", (event) => {
     const cache = await caches.open(CACHE_NAME);
     const paths = [
       "./", "./index.html", "./styles.css?v=20261106pwa1",
-      "./app.js?v=20261106pwa1", "./favicon.svg", "./manifest.webmanifest",
+      "./app.js?v=20261107auth1", "./favicon.svg", "./manifest.webmanifest",
       "./icons/icon-192.png", "./icons/icon-512.png",
       "./icons/apple-touch-icon.png",
     ];
